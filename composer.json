@@ -1,0 +1,26 @@
+{
+  "name": "functional-php/pattern-matching",
+  "description": "Pattern matching for PHP with automatic destructuring.",
+  "keywords": ["functional", "pattern", "pattern matching", "destructuring"],
+  "license": "BSD",
+  "authors": [
+    {
+      "name": "Gilles Crettenand",
+      "email": "gilles@crettenand.info"
+    }
+  ],
+  "require": {
+    "php": ">=5.6.0"
+  },
+  "require-dev": {
+    "atoum/atoum": "*"
+  },
+  "scripts": {
+    "test": "./vendor/bin/atoum --enable-branch-and-path-coverage"
+  },
+  "autoload": {
+    "psr-4": {
+      "PHPFunctional\\PatternMatching\\": "./src"
+    }
+  }
+}
