@@ -11,6 +11,7 @@ class Matcher
         '/^_$/' => '_parseWildcard',
         '/^\\[.*\\]$/' => '_parseArray',
         '/^\\([^:]+:.+\\)$/' => '_parseCons',
+        '/^[a-zA-Z]+@.+$/' => '_parseAs',
     ];
 
     private static function _parseBooleanConstant($value, $pattern)
@@ -93,6 +94,14 @@ class Matcher
         $new = self::parse($value, $last);
 
         return $new === false ? false : array_merge($results, $new);
+    }
+
+    private static function _parseAs($value, $pattern)
+    {
+        $patterns = explode('@', $pattern, 2);
+
+        $rest = self::parse($value, $patterns[1]);
+        return $rest === false ? false : array_merge([$value], $rest);
     }
 
     /**

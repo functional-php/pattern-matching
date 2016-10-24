@@ -34,6 +34,9 @@ class Matcher extends atoum
             [ 'not an array', '(x:xs)'],
             [ [], '(x:xs)'],
             [ [1], '([a, b]:xs)'],
+            [ [1], 'all@'],
+            [ [1], '_@(x:xs)'],
+            [ [1], '(x:xs)@(x:xs)'],
         ];
     }
 
@@ -141,6 +144,27 @@ class Matcher extends atoum
             [ [1], '(x:[])', [1] ],
             [ [1, 2, 3], '(x:[a, b])', [1, 2, 3] ],
             [ [1], '(x:_)', [1] ],
+        ];
+    }
+    
+    /** @dataProvider asDataProvider */
+    public function testAs($value, $pattern, $expected)
+    {
+        $function = function() { return func_get_args(); };
+
+        $this->variable(M::match($value, [$pattern => $function]))->isEqualTo($expected);
+    }
+
+    public function asDataProvider()
+    {
+        return [
+            [ [1], 'all@(x:xs)', [[1], 1, []] ],
+            [ [1, 2, 3], 'all@(x:xs)', [[1, 2, 3], 1, [2, 3]] ],
+            [ [], 'all@a', [[], []] ],
+            [ [], 'all@_', [[]] ],
+            [ [1, 2, 3], 'all@a', [[1, 2, 3], [1, 2, 3]] ],
+            [ [], 'all@[]', [[]] ],
+            [ [1, 2, 3], 'all@[a, b, c]', [[1, 2, 3], 1, 2, 3] ],
         ];
     }
 }
