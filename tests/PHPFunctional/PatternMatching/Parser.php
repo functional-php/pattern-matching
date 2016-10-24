@@ -70,8 +70,12 @@ class Parser extends atoum
     /** @dataProvider identifierDataProvider */
     public function testIdentifier($value)
     {
-        $this->array($this->newTestedInstance->parse($value, 'a'))->isEqualTo([$value]);
-        $this->array($this->newTestedInstance->parse($value, 'longIdentifier'))->isEqualTo([$value]);
+        $this->array($this->newTestedInstance->parse($value, 'a'))
+            ->strictlyContainsValues([$value])
+            ->hasSize(1);
+        $this->array($this->newTestedInstance->parse($value, 'longIdentifier'))
+            ->strictlyContainsValues([$value])
+            ->hasSize(1);
     }
 
     public function identifierDataProvider()
@@ -90,7 +94,9 @@ class Parser extends atoum
     /** @dataProvider arrayDataProvider */
     public function testArray($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($value, $pattern))->isEqualTo($expected);
+        $this->array($this->newTestedInstance->parse($value, $pattern))
+            ->strictlyContainsValues($expected)
+            ->hasSize(count($expected));
     }
 
     public function arrayDataProvider()
@@ -113,7 +119,9 @@ class Parser extends atoum
     /** @dataProvider consDataProvider */
     public function testCons($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($value, $pattern))->isEqualTo($expected);
+        $this->array($this->newTestedInstance->parse($value, $pattern))
+            ->strictlyContainsValues($expected)
+            ->hasSize(count($expected));
     }
 
     public function consDataProvider()
@@ -137,7 +145,9 @@ class Parser extends atoum
     /** @dataProvider asDataProvider */
     public function testAs($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($value, $pattern))->isEqualTo($expected);
+        $this->array($this->newTestedInstance->parse($value, $pattern))
+            ->strictlyContainsValues($expected)
+            ->hasSize(count($expected));
     }
 
     public function asDataProvider()

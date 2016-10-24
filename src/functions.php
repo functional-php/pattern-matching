@@ -3,6 +3,22 @@
 namespace FunctionalPHP\PatternMatching;
 
 /**
+ * Destructure the given value using the given pattern, then returns
+ * the resulting values as an array indexed using the identifiers of
+ * the pattern.
+ *
+ * If the extraction failed, will return False.
+ *
+ * @param mixed $value
+ * @param string $pattern
+ * @return array|bool
+ */
+function extract($value, $pattern)
+{
+    return (new Parser())->parse($value, $pattern);
+}
+
+/**
  * Given a value and an array with the format <pattern> => <callback>,
  * matches the value to the first pattern possible and execute the
  * callback by passing the arguments destructured from the value.

@@ -30,7 +30,7 @@ class Parser
 
     protected function _parseIdentifier($value, $pattern)
     {
-        return in_array(strtolower($pattern), $this->reserved) ? false : [$value];
+        return in_array(strtolower($pattern), $this->reserved) ? false : [$pattern => $value];
     }
 
     protected function _parseWildcard()
@@ -104,7 +104,7 @@ class Parser
         $patterns = explode('@', $pattern, 2);
 
         $rest = $this->parse($value, $patterns[1]);
-        return $rest === false ? false : array_merge([$value], $rest);
+        return $rest === false ? false : array_merge([$patterns[0] => $value], $rest);
     }
 
     /**

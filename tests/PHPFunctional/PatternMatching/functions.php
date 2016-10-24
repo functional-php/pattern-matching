@@ -43,4 +43,19 @@ class stdClass extends atoum
     {
         $this->variable(M\match($value, [$pattern => $expected]))->isEqualTo($expected);
     }
+
+    /** @dataProvider extractDataProvider */
+    public function testExtract($value, $pattern, $expected)
+    {
+        $this->variable(M\extract($value, $pattern))->isEqualTo($expected);
+    }
+
+    public function extractDataProvider()
+    {
+        return [
+            [10, 'a', ['a' => 10]],
+            [[1, 2, 3], '(x:xs)', ['x' => 1, 'xs' => [2, 3]]],
+            [[1, 2, 3], 'all@[a, b, c]', ['all' => [1, 2, 3], 'a' => 1, 'b' => 2, 'c' => 3]],
+        ];
+    }
 }
