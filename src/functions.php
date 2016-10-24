@@ -62,7 +62,7 @@ function func(array $patterns)
         return '['.implode(', ', explode(' ', $k)).']';
     }, array_keys($patterns)), array_values($patterns));
 
-    return function(...$args) use($array_patterns) {
+    return function() use($array_patterns) {
         return match(func_get_args(), $array_patterns);
     };
 }
@@ -92,38 +92,38 @@ function func(array $patterns)
 function split_enclosed($delimiter, $open, $close, $string)
 {
     $string = trim($string);
+
     if(strlen($string) === 0) {
         return [];
     }
 
-    $chars = str_split($string);
-
-    $result = array_reduce($chars, function($acc, $c) use($delimiter, $open, $close) {
-        if($acc === false) {
-            return $acc;
+    $results = [];
+    $buffer = '';
+    $depth = 0;
+    foreach(str_split($string) as $c) {
+        if($c === ' ') {
+            continue;
         }
 
-        switch($c) {
-            case $delimiter:
-                if($acc[2] === 0) {
-                    return strlen(trim($acc[1])) === 0 ?
-                        false :
-                        [array_merge($acc[0], [trim($acc[1])]), '', 0];
-                }
-                break;
-            case $open:
-                return [$acc[0], $acc[1].$c, $acc[2] + 1];
-            case $close:
-                return [$acc[0], $acc[1].$c, $acc[2] - 1];
+        if($c === $delimiter && $depth === 0) {
+            if(strlen($buffer) === 0) {
+                return false;
+            }
+
+            $results[] = $buffer;
+            $buffer = '';
+            continue;
         }
 
-        return [$acc[0], $acc[1].$c, $acc[2]];
-    }, [[], '', 0]);
+        if($c === $open) {
+            ++$depth;
+        } else if($c === $close) {
+            --$depth;
+        }
 
-    if($result === false || strlen(trim($result[1])) === 0) {
-        return false;
+        $buffer .= $c;
     }
 
-    return array_merge($result[0], [trim($result[1])]);
+    return strlen($buffer) === 0 ? false : array_merge($results, [$buffer]);
 }
 
