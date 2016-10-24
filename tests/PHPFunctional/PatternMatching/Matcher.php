@@ -68,5 +68,13 @@ class Matcher extends atoum
             ['test'], [10], [[1, 2, 3, 4]], [true], [false], [null]
         ];
     }
+
+    /** @dataProvider identifierDataProvider */
+    public function testWildcard($value)
+    {
+        $function = function() { return count(func_get_args()); };
+
+        $this->variable(M::match($value, ['_' => $function]))->isEqualTo(0);
+    }
 }
 

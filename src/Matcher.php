@@ -8,6 +8,7 @@ class Matcher
         "/^(true|false)$/i" => '_parseBooleanConstant',
         "/^(['\"])(?:(?!\\1).)*\\1$/" => '_parseStringConstant',
         "/^[a-zA-Z+]$/" => '_parseIdentifier',
+        "/^_$/" => '_parseWildcard',
     ];
 
     private static function _parseBooleanConstant($value, $pattern)
@@ -24,6 +25,11 @@ class Matcher
     private static function _parseIdentifier($value, $pattern)
     {
         return [$value];
+    }
+
+    private static function _parseWildcard($value, $pattern)
+    {
+        return [];
     }
 
     /**
