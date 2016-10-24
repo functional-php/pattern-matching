@@ -2,6 +2,49 @@
 
 namespace FunctionalPHP\PatternMatching;
 
+/**
+ * Given a value and an array with the format <pattern> => <callback>,
+ * matches the value to the first pattern possible and execute the
+ * callback by passing the arguments destructured from the value.
+ *
+ * @param mixed $value
+ * @param array $patterns <pattern> => <callback>
+ * @return mixed
+ */
+function match($value, array $patterns)
+{
+    $parser = new Parser();
+
+    foreach($patterns as $pattern => $callback) {
+        $match = $parser->parse($value, $pattern);
+
+        if($match !== false) {
+            return is_callable($callback) ?
+                call_user_func_array($callback, $match) :
+                $callback;
+        }
+    }
+
+    throw new \RuntimeException('Non-exhaustive patterns.');
+}
+
+/**
+ * Helper function to split a string using a given delimiter except
+ * if said delimiter is enclosed between two different characters.
+ *
+ * This won't work if the opening and closing character for the
+ * enclosure is the same (ie quotes), $open and $close need to
+ * be different.
+ *
+ * The enclosing can have multiple depth. Each opening character needs
+ * to be closed by exactly one closing character. No balancing is done.
+ *
+ * @param string $delimiter one character that will be the delimiter
+ * @param string $open one character that starts the enclosing
+ * @param string $close one character that stops the enclosing
+ * @param string $string the string to split
+ * @return array|string[] The split result.
+ */
 function split_enclosed($delimiter, $open, $close, $string)
 {
     $chars = str_split($string);
@@ -30,3 +73,4 @@ function split_enclosed($delimiter, $open, $close, $string)
 
     return $result;
 }
+

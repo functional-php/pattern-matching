@@ -1,23 +1,23 @@
 <?php
 
-namespace FunctionalPHP\PatternMatching\tests\units;
+namespace tests\units;
 
 use atoum;
-use FunctionalPHP\PatternMatching\Matcher as M;
+use FunctionalPHP\PatternMatching as M;
 
 
-class Matcher extends atoum
+class stdClass extends atoum
 {
     public function testNoPatterns()
     {
-        $this->exception(function() { M::match('some value', []); })
+        $this->exception(function() { M\match('some value', []); })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
 
     public function testNoMatch()
     {
-        $this->exception(function() { M::match('some value', ['"other text"' => function() {}]); })
+        $this->exception(function() { M\match('some value', ['"other text"' => function() {}]); })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
@@ -27,7 +27,7 @@ class Matcher extends atoum
     {
         $function = function() { return func_get_args(); };
 
-        $this->variable(M::match($value, [$pattern => $function]))->isEqualTo($expected);
+        $this->variable(M\match($value, [$pattern => $function]))->isEqualTo($expected);
     }
 
     public function matchDataProvider()
@@ -41,6 +41,6 @@ class Matcher extends atoum
     /** @dataProvider matchDataProvider */
     public function testConst($value, $pattern, $expected)
     {
-        $this->variable(M::match($value, [$pattern => $expected]))->isEqualTo($expected);
+        $this->variable(M\match($value, [$pattern => $expected]))->isEqualTo($expected);
     }
 }
