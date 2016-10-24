@@ -126,8 +126,8 @@ class Parser
     {
         $pattern = trim($pattern);
 
-        if(is_numeric($pattern) && is_numeric($value)) {
-            return $pattern == $value ? [] : false;
+        if(is_numeric($pattern)) {
+            return is_numeric($value) && $pattern == $value ? [] : false;
         }
 
         $matched = false;

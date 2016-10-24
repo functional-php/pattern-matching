@@ -32,6 +32,14 @@ class Parser extends atoum
             [ [], '(x:xs)'],
             [ [1], '([a, b]:xs)'],
             [ [1], 'all@[a, b]'],
+
+            ['toto', '0'],
+            ['toto', '0.0'],
+            ['toto', 'true'],
+            ['toto', '"plop"'],
+            ['toto', '[a, b, c]'],
+            ['toto', '(x:xs)'],
+            ['toto', 'all@(x:xs)'],
         ];
     }
 
