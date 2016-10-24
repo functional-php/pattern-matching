@@ -21,6 +21,9 @@
   "autoload": {
     "psr-4": {
       "PHPFunctional\\PatternMatching\\": "./src"
-    }
+    },
+    "files": [
+      "src/functions.php"
+    ]
   }
 }

@@ -9,6 +9,7 @@ class Matcher
         "/^(['\"])(?:(?!\\1).)*\\1$/" => '_parseStringConstant',
         "/^[a-zA-Z+]$/" => '_parseIdentifier',
         "/^_$/" => '_parseWildcard',
+        "/^\\[.*\\]$/" => '_parseArray',
     ];
 
     private static function _parseBooleanConstant($value, $pattern)
@@ -18,7 +19,7 @@ class Matcher
 
     private static function _parseStringConstant($value, $pattern)
     {
-        $string_pattern = substr($pattern, 1, strlen($pattern) - 2);
+        $string_pattern = substr($pattern, 1, -1);
         return is_string($value) && $string_pattern == $value ? [] : false;
     }
 
@@ -30,6 +31,38 @@ class Matcher
     private static function _parseWildcard($value, $pattern)
     {
         return [];
+    }
+
+    private static function _parseArray($value, $pattern)
+    {
+        if(! is_array($value)) {
+            return false;
+        }
+
+        $patterns = array_filter(array_map('trim', split_enclosed(',', '[', ']', substr($pattern, 1, -1))));
+
+        if(count($patterns) === 0) {
+            return count($value) === 0 ? [] : false;
+        }
+
+        if(count($patterns) > count($value)) {
+            return false;
+        }
+
+        $index = 0;
+        $results = [];
+        foreach($value as $v) {
+            $new = self::parse($v, $patterns[$index]);
+
+            if($new === false) {
+                return false;
+            }
+
+            $results = array_merge($results, $new);
+            ++$index;
+        }
+
+        return $results;
     }
 
     /**
