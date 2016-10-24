@@ -5,12 +5,12 @@ namespace PHPFunctional\PatternMatching;
 class Matcher
 {
     private static $rules = [
-        "/^(true|false)$/i" => '_parseBooleanConstant',
-        "/^(['\"])(?:(?!\\1).)*\\1$/" => '_parseStringConstant',
-        "/^[a-zA-Z]+$/" => '_parseIdentifier',
-        "/^_$/" => '_parseWildcard',
-        "/^\\[.*\\]$/" => '_parseArray',
-        "/^\\([^:]+:.+\\)$/" => '_parseCons',
+        '/^(true|false)$/i' => '_parseBooleanConstant',
+        '/^([\'"])(?:(?!\\1).)*\\1$/' => '_parseStringConstant',
+        '/^[a-zA-Z]+$/' => '_parseIdentifier',
+        '/^_$/' => '_parseWildcard',
+        '/^\\[.*\\]$/' => '_parseArray',
+        '/^\\([^:]+:.+\\)$/' => '_parseCons',
     ];
 
     private static function _parseBooleanConstant($value, $pattern)
