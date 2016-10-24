@@ -12,7 +12,7 @@ class Parser
         '/^[a-zA-Z]+$/' => '_parseIdentifier',
         '/^_$/' => '_parseWildcard',
         '/^\\[.*\\]$/' => '_parseArray',
-        '/^\\([^:]+:.+\\)$/' => '_parseCons',
+        '/^\\(.+:.+\\)$/' => '_parseCons',
         '/^[a-zA-Z]+@.+$/' => '_parseAs',
     ];
 
@@ -40,17 +40,22 @@ class Parser
 
     protected function _parseArray($value, $pattern)
     {
+        $patterns = split_enclosed(',', '[', ']', substr($pattern, 1, -1));
+
+        if($patterns === false) {
+            $this->_invalidPattern($pattern);
+        }
+
         if(! is_array($value)) {
             return false;
         }
 
-        $patterns = array_filter(array_map('trim', split_enclosed(',', '[', ']', substr($pattern, 1, -1))));
-
-        if(count($patterns) === 0) {
+        $count = count($patterns);
+        if($count === 0) {
             return count($value) === 0 ? [] : false;
         }
 
-        if(count($patterns) > count($value)) {
+        if($count > count($value)) {
             return false;
         }
 
@@ -72,11 +77,16 @@ class Parser
 
     protected function _parseCons($value, $pattern)
     {
+        $patterns = split_enclosed(':', '(', ')', substr($pattern, 1, -1));
+
+        if($patterns === false) {
+            $this->_invalidPattern($pattern);
+        }
+
         if(! is_array($value)) {
             return false;
         }
 
-        $patterns = array_filter(array_map('trim', split_enclosed(':', '(', ')', substr($pattern, 1, -1))));
         $last = array_pop($patterns);
 
         $results = [];
@@ -142,6 +152,6 @@ class Parser
 
     protected function _invalidPattern($pattern)
     {
-        throw new \RuntimeException(sprintf('Invalid pattern |%s|.', $pattern));
+        throw new \RuntimeException(sprintf('Invalid pattern "%s".', $pattern));
     }
 }

@@ -47,8 +47,8 @@ class Parser extends atoum
     public function invalidPatternProvider()
     {
         return [
-            ['(x:)'], ['(x:xs'], ['x:xs'], ['x:xs)'], ['(:xs)'],
-            // ['[a, ]'], [ '[, b]'], [ '[ , ]'],
+            ['(x:)'], ['(x:xs'], ['x:xs'], ['x:xs)'], ['(:xs)'], ['(:)'], ['(x::xs)'],
+            ['[a, ]'], ['[, b]'], ['[ , ]'], ['[a, , b'], ['[a,]'], ['[,b]'], ['[,]'],
 
             ['all@'], ['_@(x:xs)'], ['10@(x:xs)'], ['"test"@(x:xs)'],
             ['[a, b]@(x:xs)'], ['(x:xs)@[c, d]'], // ['[a, b]@[c, d]'], ['(x:xs)@(x:xs)'],
