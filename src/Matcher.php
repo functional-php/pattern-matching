@@ -4,6 +4,21 @@ namespace PHPFunctional\PatternMatching;
 
 class Matcher
 {
+    private static $rules = [
+        "/^(true|false)$/i" => '_parseBooleanConstant',
+        "/^(['\"])(?:(?!\\1).)*\\1$/" => '_parseStringConstant',
+    ];
+
+    private static function _parseBooleanConstant($value, $pattern)
+    {
+        return is_bool($value) ? [] : false;
+    }
+
+    private static function _parseStringConstant($value, $pattern)
+    {
+        $string_pattern = substr($pattern, 1, strlen($pattern) - 2);
+        return is_string($value) && $string_pattern == $value ? [] : false;
+    }
     /**
      * @param mixed $value
      * @param string $pattern
@@ -11,6 +26,22 @@ class Matcher
      */
     private static function parse($value, $pattern)
     {
+        $pattern = trim($pattern);
+
+        if(is_numeric($pattern) && is_numeric($value)) {
+            return [];
+        }
+
+        foreach(self::$rules as $regex => $method) {
+            if(preg_match($regex, $pattern)) {
+                $arguments = call_user_func_array(['static', $method], [$value, $pattern]);
+
+                if($arguments !== false) {
+                    return $arguments;
+                }
+            }
+        }
+
         return false;
     }
 

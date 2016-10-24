@@ -21,5 +21,37 @@ class Matcher extends atoum
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
+
+    /** @dataProvider constantDataProvider */
+    public function testConstant($value, $pattern)
+    {
+        $function = function() { return 'matched'; };
+
+        $this->string(M::match($value, [$pattern => $function]))->isEqualTo('matched');
+    }
+
+    public function constantDataProvider()
+    {
+        return [
+            [0, '0'],
+            [10, '10'],
+            [-10, '-10'],
+
+            [0.0, '0.0'],
+            [1.42, '1.42'], [1.42, '1.42'],
+            [-1.42, '-1.42'],
+
+            ['test', '"test"'], ['test', "'test'"],
+            ['test test', '"test test"'], ['test test', "'test test'"],
+
+            [true, 'true'], [true, 'True'], [true, 'TRUE'],
+            [True, 'true'], [True, 'True'], [True, 'TRUE'],
+            [TRUE, 'true'], [TRUE, 'True'], [TRUE, 'TRUE'],
+
+            [false, 'false'], [false, 'False'], [false, 'FALSE'],
+            [False, 'false'], [False, 'False'], [False, 'FALSE'],
+            [FALSE, 'false'], [FALSE, 'False'], [FALSE, 'FALSE'],
+        ];
+    }
 }
 
