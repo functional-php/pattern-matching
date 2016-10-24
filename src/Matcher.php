@@ -145,6 +145,6 @@ class Matcher
             }
         }
 
-        throw new \RuntimeException("Non-exhaustive patterns.");
+        throw new \RuntimeException('Non-exhaustive patterns.');
     }
 }
