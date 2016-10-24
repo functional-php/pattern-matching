@@ -45,6 +45,29 @@ function match($value, array $patterns)
 }
 
 /**
+ * Helper to create a function for which the value depends on pattern matching.
+ *
+ * You pass the various parameters your function except separated
+ * by spaces, the helper will automatically transform this to accept
+ * an array as parameter by replacing all spaces with commas.
+ *
+ * This means you cannot use any space in your patterns.
+ *
+ * @param array $patterns
+ * @return \Closure|callable
+ */
+function func(array $patterns)
+{
+    $array_patterns = array_combine(array_map(function($k) {
+        return '['.implode(', ', explode(' ', $k)).']';
+    }, array_keys($patterns)), array_values($patterns));
+
+    return function(...$args) use($array_patterns) {
+        return match(func_get_args(), $array_patterns);
+    };
+}
+
+/**
  * Helper function to split a string using a given delimiter except
  * if said delimiter is enclosed between two different characters.
  *
