@@ -26,6 +26,14 @@ class Matcher extends atoum
     public function noMatchingDataProvider()
     {
         return [
+            [0, '10'], [0, '-10'], [0, '1.0'],
+            [0.0, '10'], [0.0, '-10'], [0.0, '1.0'],
+            [5, '10'], [5, '-10'], [5, '1.0'],
+            [5.3, '10'], [5.3, '-10'], [5.3, '1.0'],
+            [true, 'false'],
+            ['true', 'true'],
+            [false, 'true'],
+            ['false', 'false'],
             ['some value', "not a valid pattern"],
             ['not an array', '[]'],
             [[1, 2], '[1, 2, 3]'],

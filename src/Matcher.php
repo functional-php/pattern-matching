@@ -4,6 +4,8 @@ namespace PHPFunctional\PatternMatching;
 
 class Matcher
 {
+    private static $reserved = ['true', 'false'];
+
     private static $rules = [
         '/^(true|false)$/i' => '_parseBooleanConstant',
         '/^([\'"])(?:(?!\\1).)*\\1$/' => '_parseStringConstant',
@@ -16,7 +18,8 @@ class Matcher
 
     private static function _parseBooleanConstant($value, $pattern)
     {
-        return is_bool($value) ? [] : false;
+        $pattern_value = strtoupper($pattern) === 'TRUE' ? true : false;
+        return is_bool($value) && $value === $pattern_value ? [] : false;
     }
 
     private static function _parseStringConstant($value, $pattern)
@@ -27,7 +30,7 @@ class Matcher
 
     private static function _parseIdentifier($value, $pattern)
     {
-        return [$value];
+        return in_array(strtolower($pattern), self::$reserved) ? false : [$value];
     }
 
     private static function _parseWildcard($value, $pattern)
@@ -114,7 +117,7 @@ class Matcher
         $pattern = trim($pattern);
 
         if(is_numeric($pattern) && is_numeric($value)) {
-            return [];
+            return $pattern == $value ? [] : false;
         }
 
         foreach(self::$rules as $regex => $method) {
