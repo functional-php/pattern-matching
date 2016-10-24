@@ -23,7 +23,7 @@ class Parser extends atoum
             ['true', 'true'],
             [false, 'true'],
             ['false', 'false'],
-            ['some value', "not a valid pattern"],
+            ['some value', '"not a matching pattern"'],
             ['not an array', '[]'],
             [[1, 2], '[1, 2, 3]'],
             [[1], '[[]]'],
@@ -31,9 +31,27 @@ class Parser extends atoum
             [ 'not an array', '(x:xs)'],
             [ [], '(x:xs)'],
             [ [1], '([a, b]:xs)'],
-            [ [1], 'all@'],
-            [ [1], '_@(x:xs)'],
-            [ [1], '(x:xs)@(x:xs)'],
+            [ [1], 'all@[a, b]'],
+        ];
+    }
+
+    /** @dataProvider invalidPatternProvider */
+    public function testInvalidPattern($pattern)
+    {
+        $this->exception(function() use($pattern) {
+            $this->newTestedInstance->parse('', $pattern);
+        })->isInstanceOf('\RuntimeException')
+          ->message->contains('Invalid pattern');
+    }
+
+    public function invalidPatternProvider()
+    {
+        return [
+            ['(x:)'], ['(x:xs'], ['x:xs'], ['x:xs)'], ['(:xs)'],
+            // ['[a, ]'], [ '[, b]'], [ '[ , ]'],
+
+            ['all@'], ['_@(x:xs)'], ['10@(x:xs)'], ['"test"@(x:xs)'],
+            ['[a, b]@(x:xs)'], ['(x:xs)@[c, d]'], // ['[a, b]@[c, d]'], ['(x:xs)@(x:xs)'],
         ];
     }
 

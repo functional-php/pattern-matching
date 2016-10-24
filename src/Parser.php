@@ -120,8 +120,11 @@ class Parser
             return $pattern == $value ? [] : false;
         }
 
+        $matched = false;
         foreach($this->rules as $regex => $method) {
             if(preg_match($regex, $pattern)) {
+                $matched = true;
+
                 $arguments = call_user_func_array([$this, $method], [$value, $pattern]);
 
                 if($arguments !== false) {
@@ -130,6 +133,15 @@ class Parser
             }
         }
 
+        if(! $matched) {
+            $this->_invalidPattern($pattern);
+        }
+
         return false;
+    }
+
+    protected function _invalidPattern($pattern)
+    {
+        throw new \RuntimeException(sprintf('Invalid pattern |%s|.', $pattern));
     }
 }
