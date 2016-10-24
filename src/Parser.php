@@ -40,73 +40,29 @@ class Parser
 
     protected function _parseArray($value, $pattern)
     {
-        $patterns = split_enclosed(',', '[', ']', substr($pattern, 1, -1));
+        $patterns = $this->_split(',', '[', ']', substr($pattern, 1, -1));
 
-        if($patterns === false) {
-            $this->_invalidPattern($pattern);
-        }
-
-        if(! is_array($value)) {
-            return false;
-        }
-
-        $count = count($patterns);
-        if($count === 0) {
+        if(count($patterns) === 0) {
             return count($value) === 0 ? [] : false;
         }
 
-        if($count > count($value)) {
-            return false;
-        }
-
-        $index = 0;
-        $results = [];
-        foreach($value as $v) {
-            $new = $this->parse($v, $patterns[$index]);
-
-            if($new === false) {
-                return false;
-            }
-
-            $results = array_merge($results, $new);
-            ++$index;
-        }
-
-        return $results;
+        return $this->_recurse($value, $patterns);
     }
 
     protected function _parseCons($value, $pattern)
     {
-        $patterns = split_enclosed(':', '(', ')', substr($pattern, 1, -1));
+        $patterns = $this->_split(':', '(', ')', substr($pattern, 1, -1));
+        $last_pattern = array_pop($patterns);
 
-        if($patterns === false) {
-            $this->_invalidPattern($pattern);
+        $results = $this->_recurse($value, $patterns);
+
+        if($results !== false) {
+            $last_result = $this->parse(array_splice($value, count($patterns)), $last_pattern);
+
+            $results = $last_result === false ? false : array_merge($results, $last_result);
         }
 
-        if(! is_array($value)) {
-            return false;
-        }
-
-        $last = array_pop($patterns);
-
-        $results = [];
-        foreach($patterns as $p) {
-            if(count($value) == 0) {
-                return false;
-            }
-
-            $new = $this->parse(array_shift($value), $p);
-
-            if($new === false) {
-                return false;
-            }
-
-            $results = array_merge($results, $new);
-        }
-
-        $new = $this->parse($value, $last);
-
-        return $new === false ? false : array_merge($results, $new);
+        return $results;
     }
 
     protected function _parseAs($value, $pattern)
@@ -148,6 +104,37 @@ class Parser
         }
 
         return false;
+    }
+
+    protected function _split($delimiter, $start, $stop, $pattern)
+    {
+        $result = split_enclosed($delimiter, $start, $stop, $pattern);
+
+        if($result === false) {
+            $this->_invalidPattern($pattern);
+        }
+
+        return $result;
+    }
+
+    protected function _recurse($value, $patterns)
+    {
+        if(! is_array($value) || count($patterns) > count($value)) {
+            return false;
+        }
+
+        $results = [];
+        foreach($patterns as $p) {
+            $new = $this->parse(array_shift($value), $p);
+
+            if($new === false) {
+                return false;
+            }
+
+            $results = array_merge($results, $new);
+        }
+
+        return $results;
     }
 
     protected function _invalidPattern($pattern)
