@@ -31,6 +31,9 @@ class Matcher extends atoum
             [[1, 2], '[1, 2, 3]'],
             [[1], '[[]]'],
             [[[1]], '[[a, b]]'],
+            [ 'not an array', '(x:xs)'],
+            [ [], '(x:xs)'],
+            [ [1], '([a, b]:xs)'],
         ];
     }
 
@@ -112,6 +115,32 @@ class Matcher extends atoum
             [ [[1, [2, 3], 4]], '[[a, [b, c], 4]]', 6],
             [ [[[[[1]]]], 2], '[[[[[a]]]], b]', 3],
             [ [[[[[1]], 2]], 3], '[[[[[1]], a]], b]', 5],
+        ];
+    }
+
+    /** @dataProvider consDataProvider */
+    public function testCons($value, $pattern, $expected)
+    {
+        $function = function() { return func_get_args(); };
+
+        $this->variable(M::match($value, [$pattern => $function]))->isEqualTo($expected);
+    }
+
+    public function consDataProvider()
+    {
+        return [
+            [ [1], '(x:xs)', [1, []] ],
+            [ [1], '(_:xs)', [[]] ],
+            [ [1, 2, 3, 4], '(x:xs)', [1, [2, 3, 4]] ],
+            [ [1, 2, 3, 4], '(x:y:xs)', [1, 2, [3, 4]] ],
+            [ [1, 2, 3, 4], '(x:y:z:xs)', [1, 2, 3, [4]] ],
+            [ [1, 2, 3, 4], '(x:2:z:xs)', [1, 3, [4]] ],
+            [ [1, 2, 3, 4], '(x:y:_:xs)', [1, 2, [4]] ],
+            [ [1, [2, 3, 4]], '[a, (x:xs)]', [1, 2, [3, 4]] ],
+            [ [[1, 2, 3], 4], '((x:xs):ys)', [1, [2, 3], [4]] ],
+            [ [1], '(x:[])', [1] ],
+            [ [1, 2, 3], '(x:[a, b])', [1, 2, 3] ],
+            [ [1], '(x:_)', [1] ],
         ];
     }
 }

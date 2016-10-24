@@ -10,6 +10,7 @@ class Matcher
         "/^[a-zA-Z]+$/" => '_parseIdentifier',
         "/^_$/" => '_parseWildcard',
         "/^\\[.*\\]$/" => '_parseArray',
+        "/^\\([^:]+:.+\\)$/" => '_parseCons',
     ];
 
     private static function _parseBooleanConstant($value, $pattern)
@@ -63,6 +64,35 @@ class Matcher
         }
 
         return $results;
+    }
+
+    private static function _parseCons($value, $pattern)
+    {
+        if(! is_array($value)) {
+            return false;
+        }
+
+        $patterns = array_filter(array_map('trim', split_enclosed(':', '(', ')', substr($pattern, 1, -1))));
+        $last = array_pop($patterns);
+
+        $results = [];
+        foreach($patterns as $p) {
+            if(count($value) == 0) {
+                return false;
+            }
+
+            $new = self::parse(array_shift($value), $p);
+
+            if($new === false) {
+                return false;
+            }
+
+            $results = array_merge($results, $new);
+        }
+
+        $new = self::parse($value, $last);
+
+        return $new === false ? false : array_merge($results, $new);
     }
 
     /**
