@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFunctional\PatternMatching;
+namespace FunctionalPHP\PatternMatching;
 
 function split_enclosed($delimiter, $open, $close, $string)
 {

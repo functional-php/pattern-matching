@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "PHPFunctional\\PatternMatching\\": "./src"
+      "FunctionalPHP\\PatternMatching\\": "./src"
     },
     "files": [
       "src/functions.php"

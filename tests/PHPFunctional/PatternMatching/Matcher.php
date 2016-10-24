@@ -1,9 +1,9 @@
 <?php
 
-namespace PHPFunctional\PatternMatching\tests\units;
+namespace FunctionalPHP\PatternMatching\tests\units;
 
 use atoum;
-use PHPFunctional\PatternMatching\Matcher as M;
+use FunctionalPHP\PatternMatching\Matcher as M;
 
 
 class Matcher extends atoum

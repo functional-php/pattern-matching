@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFunctional\PatternMatching\tests\units;
+namespace FunctionalPHP\PatternMatching\tests\units;
 
 use atoum;
 
