@@ -7,6 +7,7 @@ class Matcher
     private static $rules = [
         "/^(true|false)$/i" => '_parseBooleanConstant',
         "/^(['\"])(?:(?!\\1).)*\\1$/" => '_parseStringConstant',
+        "/^[a-zA-Z+]$/" => '_parseIdentifier',
     ];
 
     private static function _parseBooleanConstant($value, $pattern)
@@ -19,6 +20,12 @@ class Matcher
         $string_pattern = substr($pattern, 1, strlen($pattern) - 2);
         return is_string($value) && $string_pattern == $value ? [] : false;
     }
+
+    private static function _parseIdentifier($value, $pattern)
+    {
+        return [$value];
+    }
+
     /**
      * @param mixed $value
      * @param string $pattern

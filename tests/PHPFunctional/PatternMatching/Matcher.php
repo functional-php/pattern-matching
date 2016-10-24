@@ -17,7 +17,7 @@ class Matcher extends atoum
 
     public function testNoMatchingPattern()
     {
-        $this->exception(function() { M::match('some value', ['something else' => function() {}]); })
+        $this->exception(function() { M::match('some value', ['"something else"' => function() {}]); })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
@@ -51,6 +51,21 @@ class Matcher extends atoum
             [false, 'false'], [false, 'False'], [false, 'FALSE'],
             [False, 'false'], [False, 'False'], [False, 'FALSE'],
             [FALSE, 'false'], [FALSE, 'False'], [FALSE, 'FALSE'],
+        ];
+    }
+
+    /** @dataProvider identifierDataProvider */
+    public function testIdentifier($value)
+    {
+        $function = function($a) { return $a; };
+
+        $this->variable(M::match($value, ['a' => $function]))->isEqualTo($value);
+    }
+
+    public function identifierDataProvider()
+    {
+        return [
+            ['test'], [10], [[1, 2, 3, 4]], [true], [false], [null]
         ];
     }
 }
