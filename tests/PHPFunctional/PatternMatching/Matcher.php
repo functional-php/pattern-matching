@@ -72,6 +72,7 @@ class Matcher extends atoum
         $function = function($a) { return $a; };
 
         $this->variable(M::match($value, ['a' => $function]))->isEqualTo($value);
+        $this->variable(M::match($value, ['longIdentifier' => $function]))->isEqualTo($value);
     }
 
     public function identifierDataProvider()
