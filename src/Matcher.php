@@ -141,7 +141,9 @@ class Matcher
             $match = self::parse($value, $pattern);
 
             if($match !== false) {
-                return call_user_func_array($callback, $match);
+                return is_callable($callback) ?
+                    call_user_func_array($callback, $match) :
+                    $callback;
             }
         }
 
