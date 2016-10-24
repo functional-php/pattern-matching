@@ -18,6 +18,6 @@ install:
 script:
  - composer test
 
-after_script:
+after_success:
     - wget https://scrutinizer-ci.com/ocular.phar
     - php ocular.phar code-coverage:upload --access-token="f9425f56b2c9bb0e5f93eef1c1c53df07dc0c515c2373e7626e2195dce94fe6a" --format=php-clover ./reports/atoum.coverage.xml
