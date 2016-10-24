@@ -8,6 +8,41 @@ use FunctionalPHP\PatternMatching as M;
 
 class stdClass extends atoum
 {
+    /** @dataProvider splitEnclosedDataProvider */
+    public function testSplitEnclosed($value, $expected)
+    {
+        $this->variable(M\split_enclosed(',', '[', ']', $value))->isEqualTo($expected);
+    }
+
+    public function splitEnclosedDataProvider()
+    {
+        return [
+            ['', []],
+            [' ', []],
+
+            ['foo', ['foo']],
+            ['foo,bar', ['foo', 'bar']],
+            ['foo,bar,baz', ['foo', 'bar', 'baz']],
+
+            [' foo ', ['foo']],
+            [' foo,bar ', ['foo', 'bar']],
+            ['foo , bar , baz', ['foo', 'bar', 'baz']],
+
+            ['foo,', false],
+            ['foo, ', false],
+            [',foo', false],
+            [' ,foo', false],
+
+            [',', false],
+            [' , ', false],
+
+            ['[foo,bar],baz,qux', ['[foo,bar]', 'baz', 'qux']],
+            ['foo,[bar,baz],qux', ['foo', '[bar,baz]', 'qux']],
+            ['foo,bar,[baz,qux]', ['foo', 'bar', '[baz,qux]']],
+            ['foo[,[bar,baz],]qux', ['foo[,[bar,baz],]qux']],
+        ];
+    }
+
     public function testNoPatterns()
     {
         $this->exception(function() { M\match('some value', []); })
