@@ -16,6 +16,11 @@ class Parser
         '/^[a-zA-Z]+@.+$/' => '_parseAs',
     ];
 
+    protected function _parseNumericConstant($value, $pattern)
+    {
+        return is_numeric($value) && $pattern == $value ? [] : false;
+    }
+
     protected function _parseBooleanConstant($value, $pattern)
     {
         $pattern_value = strtoupper($pattern) === 'TRUE' ? true : false;
@@ -82,27 +87,30 @@ class Parser
         $pattern = trim($pattern);
 
         if(is_numeric($pattern)) {
-            return is_numeric($value) && $pattern == $value ? [] : false;
+            return $this->_parseNumericConstant($value, $pattern);
         }
 
-        $matched = false;
-        foreach($this->rules as $regex => $method) {
-            if(preg_match($regex, $pattern)) {
-                $matched = true;
+        // a true value will mean that no regex matched
+        // a false value will mean that at least one regex matched but the pattern didn't
+        // anything else is the result of the pattern matching
+        $result = array_reduce(array_keys($this->rules), function($current, $regex) use($value, $pattern) {
+            return $this->_updateParsingResult($value, $pattern, $regex, $current);
+        }, true);
 
-                $arguments = call_user_func_array([$this, $method], [$value, $pattern]);
-
-                if($arguments !== false) {
-                    return $arguments;
-                }
-            }
-        }
-
-        if(! $matched) {
+        if($result === true) {
             $this->_invalidPattern($pattern);
         }
 
-        return false;
+        return $result;
+    }
+
+    protected function _updateParsingResult($value, $pattern, $regex, $current)
+    {
+        if(is_bool($current) && preg_match($regex, $pattern)) {
+            $current = call_user_func_array([$this, $this->rules[$regex]], [$value, $pattern]);
+        }
+
+        return $current;
     }
 
     protected function _split($delimiter, $start, $stop, $pattern)
