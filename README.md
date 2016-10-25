@@ -1,4 +1,11 @@
-# Pattern Matching [![Build Status](https://travis-ci.org/functional-php/pattern-matching.svg)](https://travis-ci.org/functional-php/pattern-matching) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/functional-php/pattern-matching/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/functional-php/pattern-matching/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/functional-php/pattern-matching/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/functional-php/pattern-matching/?branch=master)
+# Pattern Matching
+
+[![Build Status](https://travis-ci.org/functional-php/pattern-matching.svg)](https://travis-ci.org/functional-php/pattern-matching)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/functional-php/pattern-matching/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/functional-php/pattern-matching/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/functional-php/pattern-matching/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/functional-php/pattern-matching/?branch=master)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/functional-php/pattern-matching.svg)](http://isitmaintained.com/project/functional-php/pattern-matching "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/functional-php/pattern-matching.svg)](http://isitmaintained.com/project/functional-php/pattern-matching "Percentage of issues still open")
+[![Chat on Gitter](https://img.shields.io/gitter/room/gitterHQ/gitter.svg)](https://gitter.im/functional-php)
 
 Pattern matching is the process of checking a series of token against a pattern.
 It is different from pattern recognition as the match needs to be exact.
