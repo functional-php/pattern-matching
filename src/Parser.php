@@ -54,15 +54,14 @@ class Parser
         $patterns = $this->_split(':', '(', ')', substr($pattern, 1, -1));
         $last_pattern = array_pop($patterns);
 
-        $results = $this->_recurse($value, $patterns);
-
-        if($results !== false) {
-            $last_result = $this->parse(array_splice($value, count($patterns)), $last_pattern);
-
-            $results = $last_result === false ? false : array_merge($results, $last_result);
+        if(! is_array($value)) {
+            return false;
         }
 
-        return $results;
+        return $this->_mergeResults(
+            $this->parse(array_splice($value, count($patterns)), $last_pattern),
+            $this->_recurse($value, $patterns)
+        );
     }
 
     protected function _parseAs($value, $pattern)
@@ -70,7 +69,7 @@ class Parser
         $patterns = explode('@', $pattern, 2);
 
         $rest = $this->parse($value, $patterns[1]);
-        return $rest === false ? false : array_merge([$patterns[0] => $value], $rest);
+        return $this->_mergeResults([$patterns[0] => $value], $rest);
     }
 
     /**
@@ -123,18 +122,16 @@ class Parser
             return false;
         }
 
-        $results = [];
-        foreach($patterns as $p) {
-            $new = $this->parse(array_shift($value), $p);
+        return array_reduce($patterns, function($results, $p) use(&$value) {
+            return $this->_mergeResults($results, $this->parse(array_shift($value), $p));
+        }, []);
+    }
 
-            if($new === false) {
-                return false;
-            }
-
-            $results = array_merge($results, $new);
-        }
-
-        return $results;
+    protected function _mergeResults($new, $current)
+    {
+        return $new === false || $current === false ?
+            false :
+            array_merge($current, $new);
     }
 
     protected function _invalidPattern($pattern)
