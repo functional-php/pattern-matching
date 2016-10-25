@@ -62,7 +62,25 @@ class Parser extends atoum
             ['[a, b]@(x:xs)'], ['(x:xs)@[c, d]'], // ['[a, b]@[c, d]'], ['(x:xs)@(x:xs)'],
         ];
     }
+    
+    /** @dataProvider nonUniquePatternProvider */
+    public function testNonUniquePattern($pattern)
+    {
+        $this->exception(function() use($pattern) {
+            $this->newTestedInstance->parse([1, 2, 3, 4], $pattern);
+        })->isInstanceOf('\RuntimeException')
+          ->message->contains('Non unique identifiers');
+    }
 
+    public function nonUniquePatternProvider()
+    {
+        return [
+            ['(x:x)'], ['(x:y:x)'],
+            ['[a, a]'], ['[a, b, a]'],
+            ['all@(all:xs)'], ['all@(x:all)'], ['all@(all:all)'],
+        ];
+    }
+    
     /** @dataProvider constantDataProvider */
     public function testConstant($value, $pattern)
     {

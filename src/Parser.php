@@ -137,9 +137,16 @@ class Parser
 
     protected function _mergeResults($new, $current)
     {
-        return $new === false || $current === false ?
-            false :
-            array_merge($current, $new);
+        if($new === false || $current === false) {
+            return false;
+        }
+
+        $common = array_intersect_key($current, $new);
+        if(count($common) > 0) {
+            throw new \RuntimeException(sprintf('Non unique identifiers: "%s".', implode(', ', array_keys($common))));
+        }
+
+        return array_merge($current, $new);
     }
 
     protected function _invalidPattern($pattern)
