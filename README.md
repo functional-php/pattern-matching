@@ -75,7 +75,7 @@ function factorial($n) {
     ]);
 }
 
-echo m\match(, [
+echo m\match([1, 2, ['a', 'b'], true], [
     '"toto"' => 'first',
     '[a, [b, c], d]' => 'second',
     '[a, _, (x:xs), c]' => 'third',
