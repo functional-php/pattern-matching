@@ -11,7 +11,7 @@ class stdClass extends atoum
     /** @dataProvider splitEnclosedDataProvider */
     public function testSplitEnclosed($value, $expected)
     {
-        $this->variable(M\split_enclosed(',', '[', ']', $value))->isEqualTo($expected);
+        $this->variable(M\split_enclosed(',', '[', ']', $value))->isIdenticalTo($expected);
     }
 
     public function splitEnclosedDataProvider()
@@ -62,7 +62,7 @@ class stdClass extends atoum
     {
         $function = function() { return func_get_args(); };
 
-        $this->variable(M\match([$pattern => $function], $value))->isEqualTo($expected);
+        $this->variable(M\match([$pattern => $function], $value))->isIdenticalTo($expected);
     }
 
     public function matchDataProvider()
@@ -76,7 +76,7 @@ class stdClass extends atoum
     /** @dataProvider matchDataProvider */
     public function testConst($value, $pattern, $expected)
     {
-        $this->variable(M\match([$pattern => $expected], $value))->isEqualTo($expected);
+        $this->variable(M\match([$pattern => $expected], $value))->isIdenticalTo($expected);
     }
 
     /** @dataProvider matchDataProvider */
@@ -85,13 +85,13 @@ class stdClass extends atoum
         $curryied = M\match([$pattern => $expected]);
 
         $this->variable($curryied)->isCallable();
-        $this->variable($curryied($value))->isEqualTo($expected);
+        $this->variable($curryied($value))->isIdenticalTo($expected);
     }
 
     /** @dataProvider extractDataProvider */
     public function testExtract($value, $pattern, $expected)
     {
-        $this->variable(M\extract($pattern, $value))->isEqualTo($expected);
+        $this->variable(M\extract($pattern, $value))->isIdenticalTo($expected);
     }
 
     /** @dataProvider extractDataProvider */
@@ -100,7 +100,7 @@ class stdClass extends atoum
         $curryied = M\extract($pattern);
 
         $this->variable($curryied)->isCallable();
-        $this->variable($curryied($value))->isEqualTo($expected);
+        $this->variable($curryied($value))->isIdenticalTo($expected);
     }
 
     public function extractDataProvider()

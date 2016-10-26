@@ -115,11 +115,9 @@ class Parser extends atoum
     public function testIdentifier($value)
     {
         $this->array($this->newTestedInstance->parse('a', $value))
-            ->strictlyContainsValues([$value])
-            ->hasSize(1);
+            ->isIdenticalTo(['a' => $value]);
         $this->array($this->newTestedInstance->parse('longIdentifier', $value))
-            ->strictlyContainsValues([$value])
-            ->hasSize(1);
+            ->isIdenticalTo(['longIdentifier' => $value]);
     }
 
     public function identifierDataProvider()
@@ -138,9 +136,10 @@ class Parser extends atoum
     /** @dataProvider arrayDataProvider */
     public function testArray($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($pattern, $value))
-            ->strictlyContainsValues($expected)
-            ->hasSize(count($expected));
+        $this->given($results = $this->newTestedInstance->parse($pattern, $value))
+             ->then
+                ->array(array_values($results))
+                ->isIdenticalTo($expected);
     }
 
     public function arrayDataProvider()
@@ -163,9 +162,10 @@ class Parser extends atoum
     /** @dataProvider consDataProvider */
     public function testCons($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($pattern, $value))
-            ->strictlyContainsValues($expected)
-            ->hasSize(count($expected));
+        $this->given($results = $this->newTestedInstance->parse($pattern, $value))
+             ->then
+                ->array(array_values($results))
+                ->isIdenticalTo($expected);
     }
 
     public function consDataProvider()
@@ -189,9 +189,10 @@ class Parser extends atoum
     /** @dataProvider asDataProvider */
     public function testAs($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($pattern, $value))
-            ->strictlyContainsValues($expected)
-            ->hasSize(count($expected));
+        $this->given($results = $this->newTestedInstance->parse($pattern, $value))
+             ->then
+                ->array(array_values($results))
+                ->isIdenticalTo($expected);
     }
 
     public function asDataProvider()
