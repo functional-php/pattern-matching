@@ -9,13 +9,13 @@ namespace FunctionalPHP\PatternMatching;
  *
  * If the extraction failed, will return False.
  *
- * @param mixed $value
  * @param string $pattern
+ * @param mixed $value
  * @return array|bool
  */
-function extract($value, $pattern)
+function extract($pattern, $value)
 {
-    return (new Parser())->parse($value, $pattern);
+    return (new Parser())->parse($pattern, $value);
 }
 
 /**
@@ -23,16 +23,16 @@ function extract($value, $pattern)
  * matches the value to the first pattern possible and execute the
  * callback by passing the arguments destructured from the value.
  *
- * @param mixed $value
  * @param array $patterns <pattern> => <callback>
+ * @param mixed $value
  * @return mixed
  */
-function match($value, array $patterns)
+function match(array $patterns, $value)
 {
     $parser = new Parser();
 
     foreach($patterns as $pattern => $callback) {
-        $match = $parser->parse($value, $pattern);
+        $match = $parser->parse($pattern, $value);
 
         if($match !== false) {
             return is_callable($callback) ?
@@ -63,7 +63,7 @@ function func(array $patterns)
     }, array_keys($patterns)), array_values($patterns));
 
     return function() use($array_patterns) {
-        return match(func_get_args(), $array_patterns);
+        return match($array_patterns, func_get_args());
     };
 }
 

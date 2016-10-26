@@ -64,7 +64,7 @@ class Parser
         }
 
         return $this->_mergeResults(
-            $this->parse(array_splice($value, count($patterns)), $last_pattern),
+            $this->parse($last_pattern, array_splice($value, count($patterns))),
             $this->_recurse($value, $patterns)
         );
     }
@@ -73,16 +73,16 @@ class Parser
     {
         $patterns = explode('@', $pattern, 2);
 
-        $rest = $this->parse($value, $patterns[1]);
+        $rest = $this->parse($patterns[1], $value);
         return $this->_mergeResults([$patterns[0] => $value], $rest);
     }
 
     /**
-     * @param mixed $value
      * @param string $pattern
+     * @param mixed $value
      * @return bool|array
      */
-    public function parse($value, $pattern)
+    public function parse($pattern, $value)
     {
         $pattern = trim($pattern);
 
@@ -131,7 +131,7 @@ class Parser
         }
 
         return array_reduce($patterns, function($results, $p) use(&$value) {
-            return $this->_mergeResults($results, $this->parse(array_shift($value), $p));
+            return $this->_mergeResults($results, $this->parse($p, array_shift($value)));
         }, []);
     }
 

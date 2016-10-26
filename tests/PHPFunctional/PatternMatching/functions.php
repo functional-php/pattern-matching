@@ -45,14 +45,14 @@ class stdClass extends atoum
 
     public function testNoPatterns()
     {
-        $this->exception(function() { M\match('some value', []); })
+        $this->exception(function() { M\match([], 'some value'); })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
 
     public function testNoMatch()
     {
-        $this->exception(function() { M\match('some value', ['"other text"' => function() {}]); })
+        $this->exception(function() { M\match(['"other text"' => function() {}], 'some value'); })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
@@ -62,7 +62,7 @@ class stdClass extends atoum
     {
         $function = function() { return func_get_args(); };
 
-        $this->variable(M\match($value, [$pattern => $function]))->isEqualTo($expected);
+        $this->variable(M\match([$pattern => $function], $value))->isEqualTo($expected);
     }
 
     public function matchDataProvider()
@@ -76,13 +76,13 @@ class stdClass extends atoum
     /** @dataProvider matchDataProvider */
     public function testConst($value, $pattern, $expected)
     {
-        $this->variable(M\match($value, [$pattern => $expected]))->isEqualTo($expected);
+        $this->variable(M\match([$pattern => $expected], $value))->isEqualTo($expected);
     }
 
     /** @dataProvider extractDataProvider */
     public function testExtract($value, $pattern, $expected)
     {
-        $this->variable(M\extract($value, $pattern))->isEqualTo($expected);
+        $this->variable(M\extract($pattern, $value))->isEqualTo($expected);
     }
 
     public function extractDataProvider()

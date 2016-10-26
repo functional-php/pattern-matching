@@ -9,7 +9,7 @@ class Parser extends atoum
     /** @dataProvider noMatchingPatternDataProvider */
     public function testNoMatchingPattern($value, $pattern)
     {
-        $this->boolean($this->newTestedInstance->parse($value, $pattern))->isFalse();
+        $this->boolean($this->newTestedInstance->parse($pattern, $value))->isFalse();
     }
 
     public function noMatchingPatternDataProvider()
@@ -47,7 +47,7 @@ class Parser extends atoum
     public function testInvalidPattern($pattern)
     {
         $this->exception(function() use($pattern) {
-            $this->newTestedInstance->parse('', $pattern);
+            $this->newTestedInstance->parse($pattern, '');
         })->isInstanceOf('\RuntimeException')
           ->message->contains('Invalid pattern');
     }
@@ -67,7 +67,7 @@ class Parser extends atoum
     public function testNonUniquePattern($pattern)
     {
         $this->exception(function() use($pattern) {
-            $this->newTestedInstance->parse([1, 2, 3, 4], $pattern);
+            $this->newTestedInstance->parse($pattern, [1, 2, 3, 4]);
         })->isInstanceOf('\RuntimeException')
           ->message->contains('Non unique identifiers');
     }
@@ -84,7 +84,7 @@ class Parser extends atoum
     /** @dataProvider constantDataProvider */
     public function testConstant($value, $pattern)
     {
-        $this->array($this->newTestedInstance->parse($value, $pattern))->isEmpty();
+        $this->array($this->newTestedInstance->parse($pattern, $value))->isEmpty();
     }
 
     public function constantDataProvider()
@@ -114,10 +114,10 @@ class Parser extends atoum
     /** @dataProvider identifierDataProvider */
     public function testIdentifier($value)
     {
-        $this->array($this->newTestedInstance->parse($value, 'a'))
+        $this->array($this->newTestedInstance->parse('a', $value))
             ->strictlyContainsValues([$value])
             ->hasSize(1);
-        $this->array($this->newTestedInstance->parse($value, 'longIdentifier'))
+        $this->array($this->newTestedInstance->parse('longIdentifier', $value))
             ->strictlyContainsValues([$value])
             ->hasSize(1);
     }
@@ -132,13 +132,13 @@ class Parser extends atoum
     /** @dataProvider identifierDataProvider */
     public function testWildcard($value)
     {
-        $this->array($this->newTestedInstance->parse($value, '_'))->isEmpty();
+        $this->array($this->newTestedInstance->parse('_', $value))->isEmpty();
     }
 
     /** @dataProvider arrayDataProvider */
     public function testArray($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($value, $pattern))
+        $this->array($this->newTestedInstance->parse($pattern, $value))
             ->strictlyContainsValues($expected)
             ->hasSize(count($expected));
     }
@@ -163,7 +163,7 @@ class Parser extends atoum
     /** @dataProvider consDataProvider */
     public function testCons($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($value, $pattern))
+        $this->array($this->newTestedInstance->parse($pattern, $value))
             ->strictlyContainsValues($expected)
             ->hasSize(count($expected));
     }
@@ -189,7 +189,7 @@ class Parser extends atoum
     /** @dataProvider asDataProvider */
     public function testAs($value, $pattern, $expected)
     {
-        $this->array($this->newTestedInstance->parse($value, $pattern))
+        $this->array($this->newTestedInstance->parse($pattern, $value))
             ->strictlyContainsValues($expected)
             ->hasSize(count($expected));
     }
