@@ -79,10 +79,28 @@ class stdClass extends atoum
         $this->variable(M\match([$pattern => $expected], $value))->isEqualTo($expected);
     }
 
+    /** @dataProvider matchDataProvider */
+    public function testCurryConst($value, $pattern, $expected)
+    {
+        $curryied = M\match([$pattern => $expected]);
+
+        $this->variable($curryied)->isCallable();
+        $this->variable($curryied($value))->isEqualTo($expected);
+    }
+
     /** @dataProvider extractDataProvider */
     public function testExtract($value, $pattern, $expected)
     {
         $this->variable(M\extract($pattern, $value))->isEqualTo($expected);
+    }
+
+    /** @dataProvider extractDataProvider */
+    public function testCurryExtract($value, $pattern, $expected)
+    {
+        $curryied = M\extract($pattern);
+
+        $this->variable($curryied)->isCallable();
+        $this->variable($curryied($value))->isEqualTo($expected);
     }
 
     public function extractDataProvider()

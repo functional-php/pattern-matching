@@ -11,11 +11,15 @@ namespace FunctionalPHP\PatternMatching;
  *
  * @param string $pattern
  * @param mixed $value
- * @return array|bool
+ * @return array|bool|callable
  */
-function extract($pattern, $value)
+function extract($pattern, $value = null)
 {
-    return (new Parser())->parse($pattern, $value);
+    $function = function($value) use($pattern) {
+        return (new Parser())->parse($pattern, $value);
+    };
+
+    return func_num_args() > 1 ? $function($value) : $function;
 }
 
 /**
@@ -25,23 +29,27 @@ function extract($pattern, $value)
  *
  * @param array $patterns <pattern> => <callback>
  * @param mixed $value
- * @return mixed
+ * @return array|mixed|callable
  */
-function match(array $patterns, $value)
+function match(array $patterns, $value = null)
 {
-    $parser = new Parser();
+    $function = function($value) use($patterns) {
+        $parser = new Parser();
 
-    foreach($patterns as $pattern => $callback) {
-        $match = $parser->parse($pattern, $value);
+        foreach($patterns as $pattern => $callback) {
+            $match = $parser->parse($pattern, $value);
 
-        if($match !== false) {
-            return is_callable($callback) ?
-                call_user_func_array($callback, $match) :
-                $callback;
+            if($match !== false) {
+                return is_callable($callback) ?
+                    call_user_func_array($callback, $match) :
+                    $callback;
+            }
         }
-    }
 
-    throw new \RuntimeException('Non-exhaustive patterns.');
+        throw new \RuntimeException('Non-exhaustive patterns.');
+    };
+
+    return func_num_args() > 1 ? $function($value) : $function;
 }
 
 /**
