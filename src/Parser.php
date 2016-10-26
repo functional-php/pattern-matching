@@ -74,7 +74,7 @@ class Parser
         $patterns = explode('@', $pattern, 2);
 
         $rest = $this->parse($patterns[1], $value);
-        return $this->_mergeResults([$patterns[0] => $value], $rest);
+        return $this->_mergeResults($rest, [$patterns[0] => $value]);
     }
 
     /**
@@ -131,7 +131,7 @@ class Parser
         }
 
         return array_reduce($patterns, function($results, $p) use(&$value) {
-            return $this->_mergeResults($results, $this->parse($p, array_shift($value)));
+            return $this->_mergeResults($this->parse($p, array_shift($value)), $results);
         }, []);
     }
 
