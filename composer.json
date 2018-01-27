@@ -2,7 +2,7 @@
   "name": "functional-php/pattern-matching",
   "description": "Pattern matching for PHP with automatic destructuring.",
   "keywords": ["functional", "pattern", "pattern matching", "destructuring"],
-  "license": "BSD",
+  "license": "BSD-3-Clause",
   "authors": [
     {
       "name": "Gilles Crettenand",
