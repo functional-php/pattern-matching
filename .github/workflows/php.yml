@@ -14,6 +14,8 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php }}
+          # install xdebug for code coverage purposes
+          extensions: xdebug
       - name: Validate composer.json and composer.lock
         run: composer validate
       - name: Get Composer cache directory
