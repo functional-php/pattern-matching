@@ -3,18 +3,18 @@
 [![Build Status](https://travis-ci.org/functional-php/pattern-matching.svg)](https://travis-ci.org/functional-php/pattern-matching)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/functional-php/pattern-matching/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/functional-php/pattern-matching/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/functional-php/pattern-matching/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/functional-php/pattern-matching/?branch=master)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/functional-php/pattern-matching.svg)](http://isitmaintained.com/project/functional-php/pattern-matching "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/functional-php/pattern-matching.svg)](http://isitmaintained.com/project/functional-php/pattern-matching "Percentage of issues still open")
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/functional-php/pattern-matching.svg)](http://isitmaintained.com/project/functional-php/pattern-matching 'Average time to resolve an issue')
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/functional-php/pattern-matching.svg)](http://isitmaintained.com/project/functional-php/pattern-matching 'Percentage of issues still open')
 [![Chat on Gitter](https://img.shields.io/gitter/room/gitterHQ/gitter.svg)](https://gitter.im/functional-php)
 
 Pattern matching is the process of checking a series of token against a pattern.
 It is different from pattern recognition as the match needs to be exact.
 The process does not only match as a switch statement does, it also assigns the value
-a bit like the ``list`` construct in PHP, a process called **destructuring**.
+a bit like the `list` construct in PHP, a process called **destructuring**.
 
 Most functional languages implement it as a core feature. Here is are some small examples in Haskell:
 
-``` haskell
+```haskell
 
 fact :: (Integral a) => a -> a
 fact 0 = 1
@@ -74,7 +74,7 @@ You can also use the `match` function if you want to have a beefed up version of
 use FunctionalPHP\PatternMatching as m;
 
 function factorial($n) {
-    return m\match($n, [
+    return m\pmatch($n, [
         '0' => 1,
         'n' => function($n) use(&$fact) {
             return $n * factorial($n - 1);
@@ -82,7 +82,7 @@ function factorial($n) {
     ]);
 }
 
-echo m\match([1, 2, ['a', 'b'], true], [
+echo m\pmatch([1, 2, ['a', 'b'], true], [
     '"toto"' => 'first',
     '[a, [b, c], d]' => 'second',
     '[a, _, (x:xs), c]' => 'third',
@@ -94,7 +94,7 @@ echo m\match([1, 2, ['a', 'b'], true], [
 
 If you are just interested in destructuring your values, there is also a helper for that:
 
-``` php
+```php
 
 use FunctionalPHP\PatternMatching as m;
 
@@ -112,21 +112,21 @@ print_r(m\extract([1, 2, ['a', 'b'], true], '[a, _, (x:xs), c]'));
 
 Here is a quick recap of the available patterns:
 
-| Name          | Format                            | Example                         |
-|---------------|-----------------------------------|---------------------------------|
-| Constant      | Any scalar value (int, float, string, boolean)    | ``1.0``, ``42``, "test"         |
-| Variable      | ``identifier``                    | ``a``, ``name``, ``anything``   |
-| Array         | ``[<pattern>, ..., <pattern>]``   | ``[]``, ``[a]``, ``[a, b, c]``  |
-| Cons          | ``(identifier:list-identifier)``  | ``(x:xs)``, ``(x:y:z:xs)``      |
-| Wildcard      | ``_``                             | ``_``                           |
-| As            | ``identifier@(<pattern>)``        | ``all@(x:xs)``                  |
+| Name     | Format                                         | Example                  |
+| -------- | ---------------------------------------------- | ------------------------ |
+| Constant | Any scalar value (int, float, string, boolean) | `1.0`, `42`, "test"      |
+| Variable | `identifier`                                   | `a`, `name`, `anything`  |
+| Array    | `[<pattern>, ..., <pattern>]`                  | `[]`, `[a]`, `[a, b, c]` |
+| Cons     | `(identifier:list-identifier)`                 | `(x:xs)`, `(x:y:z:xs)`   |
+| Wildcard | `_`                                            | `_`                      |
+| As       | `identifier@(<pattern>)`                       | `all@(x:xs)`             |
 
 ## Testing
 
 You can run the test suite for the library using:
 
     composer test
-    
+
 A test report will be available in the `reports` directory.
 
 ## Contributing

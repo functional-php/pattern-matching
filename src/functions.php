@@ -31,7 +31,7 @@ function extract($pattern, $value = null)
  * @param mixed $value
  * @return array|mixed|callable
  */
-function match(array $patterns, $value = null)
+function pmatch(array $patterns, $value = null)
 {
     $function = function($value) use($patterns) {
         $parser = new Parser();
@@ -71,7 +71,7 @@ function func(array $patterns)
     }, array_keys($patterns)), array_values($patterns));
 
     return function() use($array_patterns) {
-        return match($array_patterns, func_get_args());
+        return pmatch($array_patterns, func_get_args());
     };
 }
 
