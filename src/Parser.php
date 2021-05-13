@@ -47,8 +47,10 @@ class Parser
     {
         $patterns = $this->_split(',', '[', ']', substr($pattern, 1, -1));
 
-        if(count($patterns) === 0) {
-            return count($value) === 0 ? [] : false;
+		if ($value instanceof \Countable || is_array($value)) {
+            if(count($patterns) === 0) {
+                return count($value) === 0 ? [] : false;
+            }
         }
 
         return $this->_recurse($value, $patterns);
