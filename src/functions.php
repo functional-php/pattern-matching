@@ -40,9 +40,13 @@ function pmatch(array $patterns, $value = null)
             $match = $parser->parse($pattern, $value);
 
             if($match !== false) {
-                return is_callable($callback) ?
-                    call_user_func_array($callback, $match) :
-                    $callback;
+                try {
+                    return is_callable($callback) ?
+                        call_user_func_array($callback, array_values($match)) :
+                        $callback;
+                } catch (\Throwable $exp) {
+                    return $callback;
+                }
             }
         }
 
