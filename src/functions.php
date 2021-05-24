@@ -71,7 +71,7 @@ function pmatch(array $patterns, $value = null)
 function func(array $patterns)
 {
     $array_patterns = array_combine(array_map(function ($k) {
-        return '['.implode(', ', explode(' ', $k)).']';
+        return '[' . implode(', ', explode(' ', $k)) . ']';
     }, array_keys($patterns)), array_values($patterns));
 
     return function () use ($array_patterns) {
