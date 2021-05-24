@@ -1,7 +1,7 @@
 # Pattern Matching
 
-[![Build Status](https://travis-ci.org/functional-php/pattern-matching.svg)](https://travis-ci.org/functional-php/pattern-matching)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/functional-php/pattern-matching/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/functional-php/pattern-matching/?branch=master)
+[![pattern-matching CI](https://github.com/ace411/pattern-matching/actions/workflows/php.yml/badge.svg?branch=master)](https://github.com/ace411/pattern-matching/actions/workflows/php.yml)
+[![StyleCI](https://github.styleci.io/repos/341440518/shield?branch=master)](https://github.styleci.io/repos/341440518?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/functional-php/pattern-matching/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/functional-php/pattern-matching/?branch=master)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/functional-php/pattern-matching.svg)](http://isitmaintained.com/project/functional-php/pattern-matching 'Average time to resolve an issue')
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/functional-php/pattern-matching.svg)](http://isitmaintained.com/project/functional-php/pattern-matching 'Percentage of issues still open')
