@@ -5,7 +5,6 @@ namespace tests\units;
 use atoum;
 use FunctionalPHP\PatternMatching as M;
 
-
 class stdClass extends atoum
 {
     /** @dataProvider splitEnclosedDataProvider */
@@ -45,14 +44,19 @@ class stdClass extends atoum
 
     public function testNoPatterns()
     {
-        $this->exception(function() { M\pmatch([], 'some value'); })
+        $this->exception(function () {
+            M\pmatch([], 'some value');
+        })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
 
     public function testNoMatch()
     {
-        $this->exception(function() { M\pmatch(['"other text"' => function() {}], 'some value'); })
+        $this->exception(function () {
+            M\pmatch(['"other text"' => function () {
+            }], 'some value');
+        })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
@@ -60,7 +64,9 @@ class stdClass extends atoum
     /** @dataProvider matchDataProvider */
     public function testMatch($value, $pattern, $expected)
     {
-        $function = function() { return func_get_args(); };
+        $function = function () {
+            return func_get_args();
+        };
 
         $this->variable(M\pmatch([$pattern => $function], $value))->isIdenticalTo($expected);
     }
