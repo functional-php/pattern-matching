@@ -1,7 +1,12 @@
 {
   "name": "functional-php/pattern-matching",
   "description": "Pattern matching for PHP with automatic destructuring.",
-  "keywords": ["functional", "pattern", "pattern matching", "destructuring"],
+  "keywords": [
+    "functional",
+    "pattern",
+    "pattern matching",
+    "destructuring"
+  ],
   "license": "BSD-3-Clause",
   "authors": [
     {
@@ -13,10 +18,9 @@
     "php": ">=5.6.0"
   },
   "require-dev": {
-    "atoum/atoum": "*"
-  },
-  "scripts": {
-    "test": "./vendor/bin/atoum --enable-branch-and-path-coverage"
+    "atoum/atoum": "^3 || ^4",
+    "atoum/reports-extension": "^3 || ^4",
+    "friendsofphp/php-cs-fixer": "~2 || ~3"
   },
   "autoload": {
     "psr-4": {
@@ -25,5 +29,9 @@
     "files": [
       "src/functions.php"
     ]
+  },
+  "scripts": {
+    "ci:fix": "./vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --diff --verbose --rules=@PSR12",
+    "test": "./vendor/bin/atoum --enable-branch-and-path-coverage"
   }
 }

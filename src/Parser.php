@@ -47,8 +47,10 @@ class Parser
     {
         $patterns = $this->_split(',', '[', ']', substr($pattern, 1, -1));
 
-        if(count($patterns) === 0) {
-            return count($value) === 0 ? [] : false;
+        if ($value instanceof \Countable || is_array($value)) {
+            if (count($patterns) === 0) {
+                return count($value) === 0 ? [] : false;
+            }
         }
 
         return $this->_recurse($value, $patterns);
@@ -59,7 +61,7 @@ class Parser
         $patterns = $this->_split(':', '(', ')', substr($pattern, 1, -1));
         $last_pattern = array_pop($patterns);
 
-        if(! is_array($value)) {
+        if (! is_array($value)) {
             return false;
         }
 
@@ -86,18 +88,18 @@ class Parser
     {
         $pattern = trim($pattern);
 
-        if(is_numeric($pattern)) {
+        if (is_numeric($pattern)) {
             return $this->_parseNumericConstant($value, $pattern);
         }
 
         // a true value will mean that no regex matched
         // a false value will mean that at least one regex matched but the pattern didn't
         // anything else is the result of the pattern matching
-        $result = array_reduce(array_keys($this->rules), function($current, $regex) use($value, $pattern) {
+        $result = array_reduce(array_keys($this->rules), function ($current, $regex) use ($value, $pattern) {
             return $this->_updateParsingResult($value, $pattern, $regex, $current);
         }, true);
 
-        if($result === true) {
+        if ($result === true) {
             $this->_invalidPattern($pattern);
         }
 
@@ -106,7 +108,7 @@ class Parser
 
     protected function _updateParsingResult($value, $pattern, $regex, $current)
     {
-        if(is_bool($current) && preg_match($regex, $pattern)) {
+        if (is_bool($current) && preg_match($regex, $pattern)) {
             $current = call_user_func_array([$this, $this->rules[$regex]], [$value, $pattern]);
         }
 
@@ -117,7 +119,7 @@ class Parser
     {
         $result = split_enclosed($delimiter, $start, $stop, $pattern);
 
-        if($result === false) {
+        if ($result === false) {
             $this->_invalidPattern($pattern);
         }
 
@@ -126,23 +128,23 @@ class Parser
 
     protected function _recurse($value, $patterns)
     {
-        if(! is_array($value) || count($patterns) > count($value)) {
+        if (! is_array($value) || count($patterns) > count($value)) {
             return false;
         }
 
-        return array_reduce($patterns, function($results, $p) use(&$value) {
+        return array_reduce($patterns, function ($results, $p) use (&$value) {
             return $this->_mergeResults($this->parse($p, array_shift($value)), $results);
         }, []);
     }
 
     protected function _mergeResults($new, $current)
     {
-        if($new === false || $current === false) {
+        if ($new === false || $current === false) {
             return false;
         }
 
         $common = array_intersect_key($current, $new);
-        if(count($common) > 0) {
+        if (count($common) > 0) {
             throw new \RuntimeException(sprintf('Non unique identifiers: "%s".', implode(', ', array_keys($common))));
         }
 

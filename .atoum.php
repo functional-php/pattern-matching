@@ -1,15 +1,13 @@
 <?php
 
-use \mageekguy\atoum;
+use atoum\atoum\reports;
+use atoum\atoum\reports\coverage;
+use atoum\atoum\writers\std;
 
-$report = $script->addDefaultReport();
+$script->addDefaultReport();
 
-$coverageField = new atoum\report\fields\runner\coverage\html('Pattern Matching', './reports/');
-$report->addField($coverageField);
-
-$cloverWriter = new atoum\writers\file('./reports/atoum.coverage.xml');
-$cloverReport = new atoum\reports\asynchronous\clover();
-$cloverReport->addWriter($cloverWriter);
-$runner->addReport($cloverReport);
-
+$clover = new \atoum\atoum\reports\sonar\clover();
+$writer = new \atoum\atoum\writers\file('coverage.xml');
+$clover->addWriter($writer);
+$runner->addReport($clover);
 $runner->addTestsFromDirectory('./tests');

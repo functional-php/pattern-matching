@@ -1,2 +1,4 @@
 vendor/
 reports/
+composer.lock
+*.cache

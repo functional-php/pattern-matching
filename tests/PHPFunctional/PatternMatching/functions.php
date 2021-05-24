@@ -5,7 +5,6 @@ namespace tests\units;
 use atoum;
 use FunctionalPHP\PatternMatching as M;
 
-
 class stdClass extends atoum
 {
     /** @dataProvider splitEnclosedDataProvider */
@@ -45,14 +44,19 @@ class stdClass extends atoum
 
     public function testNoPatterns()
     {
-        $this->exception(function() { M\match([], 'some value'); })
+        $this->exception(function () {
+            M\pmatch([], 'some value');
+        })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
 
     public function testNoMatch()
     {
-        $this->exception(function() { M\match(['"other text"' => function() {}], 'some value'); })
+        $this->exception(function () {
+            M\pmatch(['"other text"' => function () {
+            }], 'some value');
+        })
              ->hasMessage('Non-exhaustive patterns.')
              ->isInstanceOf('\RuntimeException');
     }
@@ -60,9 +64,11 @@ class stdClass extends atoum
     /** @dataProvider matchDataProvider */
     public function testMatch($value, $pattern, $expected)
     {
-        $function = function() { return func_get_args(); };
+        $function = function () {
+            return func_get_args();
+        };
 
-        $this->variable(M\match([$pattern => $function], $value))->isIdenticalTo($expected);
+        $this->variable(M\pmatch([$pattern => $function], $value))->isIdenticalTo($expected);
     }
 
     public function matchDataProvider()
@@ -76,13 +82,13 @@ class stdClass extends atoum
     /** @dataProvider matchDataProvider */
     public function testConst($value, $pattern, $expected)
     {
-        $this->variable(M\match([$pattern => $expected], $value))->isIdenticalTo($expected);
+        $this->variable(M\pmatch([$pattern => $expected], $value))->isIdenticalTo($expected);
     }
 
     /** @dataProvider matchDataProvider */
     public function testCurryConst($value, $pattern, $expected)
     {
-        $curryied = M\match([$pattern => $expected]);
+        $curryied = M\pmatch([$pattern => $expected]);
 
         $this->variable($curryied)->isCallable();
         $this->variable($curryied($value))->isIdenticalTo($expected);
