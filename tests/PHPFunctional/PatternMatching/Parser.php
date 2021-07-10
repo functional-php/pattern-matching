@@ -102,11 +102,6 @@ class Parser extends atoum
             ['test test', '"test test"'], ['test test', "'test test'"],
 
             [true, 'true'], [true, 'True'], [true, 'TRUE'],
-            [true, 'true'], [true, 'True'], [true, 'TRUE'],
-            [true, 'true'], [true, 'True'], [true, 'TRUE'],
-
-            [false, 'false'], [false, 'False'], [false, 'FALSE'],
-            [false, 'false'], [false, 'False'], [false, 'FALSE'],
             [false, 'false'], [false, 'False'], [false, 'FALSE'],
         ];
     }
