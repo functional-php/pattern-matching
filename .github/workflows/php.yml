@@ -1,0 +1,35 @@
+name: pattern-matching CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.2', '7.3', '7.4', '8.0']
+    name: PHP ${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: ${{ matrix.php }}
+          # install xdebug for code coverage purposes
+          extensions: xdebug
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ matrix.php }}-composer-
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Run test suite
+        run: vendor/bin/atoum --enable-branch-and-path-coverage
+      - name: Generate codecov coverage report
+        run: bash <(curl -s https://codecov.io/bash)

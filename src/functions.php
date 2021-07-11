@@ -15,7 +15,7 @@ namespace FunctionalPHP\PatternMatching;
  */
 function extract($pattern, $value = null)
 {
-    $function = function($value) use($pattern) {
+    $function = function ($value) use ($pattern) {
         return (new Parser())->parse($pattern, $value);
     };
 
@@ -31,18 +31,22 @@ function extract($pattern, $value = null)
  * @param mixed $value
  * @return array|mixed|callable
  */
-function match(array $patterns, $value = null)
+function pmatch(array $patterns, $value = null)
 {
-    $function = function($value) use($patterns) {
+    $function = function ($value) use ($patterns) {
         $parser = new Parser();
 
-        foreach($patterns as $pattern => $callback) {
+        foreach ($patterns as $pattern => $callback) {
             $match = $parser->parse($pattern, $value);
 
-            if($match !== false) {
-                return is_callable($callback) ?
-                    call_user_func_array($callback, $match) :
-                    $callback;
+            if ($match !== false) {
+                try {
+                    return is_callable($callback) ?
+                        call_user_func_array($callback, array_values($match)) :
+                        $callback;
+                } catch (\Throwable $exp) {
+                    return $callback;
+                }
             }
         }
 
@@ -66,12 +70,12 @@ function match(array $patterns, $value = null)
  */
 function func(array $patterns)
 {
-    $array_patterns = array_combine(array_map(function($k) {
-        return '['.implode(', ', explode(' ', $k)).']';
+    $array_patterns = array_combine(array_map(function ($k) {
+        return '[' . implode(', ', explode(' ', $k)) . ']';
     }, array_keys($patterns)), array_values($patterns));
 
-    return function() use($array_patterns) {
-        return match($array_patterns, func_get_args());
+    return function () use ($array_patterns) {
+        return pmatch($array_patterns, func_get_args());
     };
 }
 
@@ -101,20 +105,20 @@ function split_enclosed($delimiter, $open, $close, $string)
 {
     $string = trim($string);
 
-    if(strlen($string) === 0) {
+    if (strlen($string) === 0) {
         return [];
     }
 
     $results = [];
     $buffer = '';
     $depth = 0;
-    foreach(str_split($string) as $c) {
-        if($c === ' ') {
+    foreach (str_split($string) as $c) {
+        if ($c === ' ') {
             continue;
         }
 
-        if($c === $delimiter && $depth === 0) {
-            if(strlen($buffer) === 0) {
+        if ($c === $delimiter && $depth === 0) {
+            if (strlen($buffer) === 0) {
                 return false;
             }
 
@@ -123,9 +127,9 @@ function split_enclosed($delimiter, $open, $close, $string)
             continue;
         }
 
-        if($c === $open) {
+        if ($c === $open) {
             ++$depth;
-        } else if($c === $close) {
+        } elseif ($c === $close) {
             --$depth;
         }
 
@@ -134,4 +138,3 @@ function split_enclosed($delimiter, $open, $close, $string)
 
     return strlen($buffer) === 0 ? false : array_merge($results, [$buffer]);
 }
-

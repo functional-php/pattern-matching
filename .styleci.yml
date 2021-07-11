@@ -1,0 +1,8 @@
+risky: false
+version: 7
+preset: 'psr12'
+finder:
+  exclude:
+    - 'node_modules'
+    - 'vendor'
+  name: '*.php'

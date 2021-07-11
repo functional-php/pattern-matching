@@ -46,7 +46,7 @@ class Parser extends atoum
     /** @dataProvider invalidPatternProvider */
     public function testInvalidPattern($pattern)
     {
-        $this->exception(function() use($pattern) {
+        $this->exception(function () use ($pattern) {
             $this->newTestedInstance->parse($pattern, '');
         })->isInstanceOf('\RuntimeException')
           ->message->contains('Invalid pattern');
@@ -62,11 +62,11 @@ class Parser extends atoum
             ['[a, b]@(x:xs)'], ['(x:xs)@[c, d]'], // ['[a, b]@[c, d]'], ['(x:xs)@(x:xs)'],
         ];
     }
-    
+
     /** @dataProvider nonUniquePatternProvider */
     public function testNonUniquePattern($pattern)
     {
-        $this->exception(function() use($pattern) {
+        $this->exception(function () use ($pattern) {
             $this->newTestedInstance->parse($pattern, [1, 2, 3, 4]);
         })->isInstanceOf('\RuntimeException')
           ->message->contains('Non unique identifiers');
@@ -80,7 +80,7 @@ class Parser extends atoum
             ['all@(all:xs)'], ['all@(x:all)'], ['all@(all:all)'],
         ];
     }
-    
+
     /** @dataProvider constantDataProvider */
     public function testConstant($value, $pattern)
     {
@@ -102,12 +102,7 @@ class Parser extends atoum
             ['test test', '"test test"'], ['test test', "'test test'"],
 
             [true, 'true'], [true, 'True'], [true, 'TRUE'],
-            [True, 'true'], [True, 'True'], [True, 'TRUE'],
-            [TRUE, 'true'], [TRUE, 'True'], [TRUE, 'TRUE'],
-
             [false, 'false'], [false, 'False'], [false, 'FALSE'],
-            [False, 'false'], [False, 'False'], [False, 'FALSE'],
-            [FALSE, 'false'], [FALSE, 'False'], [FALSE, 'FALSE'],
         ];
     }
 
@@ -185,7 +180,7 @@ class Parser extends atoum
             [ [1], '(x:_)', [1] ],
         ];
     }
-    
+
     /** @dataProvider asDataProvider */
     public function testAs($value, $pattern, $expected)
     {
@@ -208,4 +203,3 @@ class Parser extends atoum
         ];
     }
 }
-
