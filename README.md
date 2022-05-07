@@ -74,20 +74,20 @@ You can also use the `match` function if you want to have a beefed up version of
 use FunctionalPHP\PatternMatching as m;
 
 function factorial($n) {
-    return m\pmatch($n, [
+    return m\pmatch([
         '0' => 1,
         'n' => function($n) use(&$fact) {
             return $n * factorial($n - 1);
         }
-    ]);
+    ], $n);
 }
 
-echo m\pmatch([1, 2, ['a', 'b'], true], [
+echo m\pmatch([
     '"toto"' => 'first',
     '[a, [b, c], d]' => 'second',
     '[a, _, (x:xs), c]' => 'third',
     '_' => 'default',
-]);
+], [1, 2, ['a', 'b'], true]);
 // third
 
 ```
